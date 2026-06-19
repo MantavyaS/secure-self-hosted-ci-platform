@@ -22,8 +22,38 @@ module "vpc" {
     Environment = "dev"
     Owner       = "Mantavya"
     Terraform   = "true"
-    Name        = var.instance_name
   }
+}
+
+resource "aws_security_group" "secure_ci_sg" {
+  name = "secure-ci-sg"
+  description = "security group for the secure self hosted CI platform"
+  vpc_id = module.vpc.vpc_id
+
+  tags = {
+    Project     = "Secure_Self_Hosted_CI_Platform"
+    Environment = "dev"
+    Owner       = "Mantavya"
+    Terraform   = "true"
+  }
+}
+
+resource "aws_security_group_rule" "ssh_ingress" {
+  type = "ingress"
+  from_port = 22
+  to_port = 22
+  protocol = "tcp"
+  security_group_id = aws_security_group.secure_ci_sg.id
+  cidr_blocks = ["142.189.201.143/32"]
+}
+
+resource "aws_security_group_rule" "all_egress" {
+  type = "egress"
+  from_port = 0
+  to_port = 0
+  protocol = "tcp"
+  security_group_id = aws_security_group.secure_ci_sg.id
+  cidr_blocks = ["0.0.0.0/0"]
 }
 
 data "aws_ami" "ubuntu" {
