@@ -51,7 +51,7 @@ resource "aws_security_group_rule" "all_egress" {
   type = "egress"
   from_port = 0
   to_port = 0
-  protocol = "tcp"
+  protocol = "-1"
   security_group_id = aws_security_group.secure_ci_sg.id
   cidr_blocks = ["0.0.0.0/0"]
 }
@@ -67,10 +67,20 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"]
 }
 
-resource "aws_instance" "ci-platform-server" {
+resource "aws_instance" "ci_platform_server" {
   ami = data.aws_ami.ubuntu.id
 
   instance_type = var.instance_type
+
+  iam_instance_profile = aws_iam_instance_profile.secure_ci_instance_profile.name
+  
+  associate_public_ip_address = true
+
+  vpc_security_group_ids = [
+    aws_security_group.secure_ci_sg.id
+  ]
+
+  subnet_id = module.vpc.public_subnets[0]
 
   root_block_device {
     volume_size = 20
@@ -79,6 +89,8 @@ resource "aws_instance" "ci-platform-server" {
     delete_on_termination = true
   }
 
+  user_data = 
+
   tags = {
     Project     = "Secure_Self_Hosted_CI_Platform"
     Environment = "dev"
@@ -86,4 +98,59 @@ resource "aws_instance" "ci-platform-server" {
     Terraform   = "true"
     Name        = var.instance_name
   }
+}
+
+
+// IAM role
+
+resource "aws_iam_role" "secure_ci_ec2_role" {
+  name = "secure_ci_ec2_role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid = ""
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      },
+    ]
+  })
+
+  tags = {
+    Project     = "Secure_Self_Hosted_CI_Platform"
+    Environment = "dev"
+    Owner       = "Mantavya"
+    Terraform   = "true"
+  }
+}
+
+resource "aws_iam_role_policy" "secure_ci_container_policy" {
+  name = "secure_ci_container_registry_read_policy"
+  role = aws_iam_role.secure_ci_ec2_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+          "ecr:DescribeRepositories",
+          "ecr:DescribeImages"
+        ]
+        Resource = "*"
+      },
+    ]
+  })
+}
+
+resource "aws_iam_instance_profile" "secure_ci_instance_profile" {
+  name = "secure_ci_instance_profile"
+  role = aws_iam_role.secure_ci_ec2_role.name
 }
