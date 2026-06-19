@@ -67,6 +67,12 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"]
 }
 
+resource "aws_key_pair" "secure_ci" {
+  key_name = "secure_ci_key"
+
+  public_key = file("~/.ssh/id_ed25519.pub")
+}
+
 resource "aws_instance" "ci_platform_server" {
   ami = data.aws_ami.ubuntu.id
 
@@ -82,6 +88,8 @@ resource "aws_instance" "ci_platform_server" {
 
   subnet_id = module.vpc.public_subnets[0]
 
+  key_name = aws_key_pair.secure_ci.key_name
+
   root_block_device {
     volume_size = 20
     volume_type = "gp3"
@@ -89,7 +97,7 @@ resource "aws_instance" "ci_platform_server" {
     delete_on_termination = true
   }
 
-  user_data = 
+  user_data = file("${path.path.module}/scripts/bootstrap.sh")
 
   tags = {
     Project     = "Secure_Self_Hosted_CI_Platform"
