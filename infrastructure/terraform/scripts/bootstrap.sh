@@ -8,15 +8,6 @@ echo "starting bootstrap..."
 apt-get update -y
 apt-get install -y ca-certificates curl gnupg git unzip
 
-# downloading k3s and configuring kubectl
-curl -fL https://get.k3s.io | sh -
-mkdir -p /home/ubuntu/.kube
-cp /etc/rancher/k3s/k3s.yaml /home/ubuntu/.kube/config
-chown -R ubuntu:ubuntu /home/ubuntu/.kube
-chmod 600 /home/ubuntu/.kube/config
-
-echo "installed k3s"
-
 # installing and starting docker
 install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
@@ -49,3 +40,12 @@ chmod 700 get_helm.sh
 echo "Installed Helm"
 
 echo "Bootstrap Complete"
+
+# downloading k3s and configuring kubectl
+curl -fL https://get.k3s.io | sh -
+mkdir -p /home/ubuntu/.kube
+cp /etc/rancher/k3s/k3s.yaml /home/ubuntu/.kube/config
+chown -R ubuntu:ubuntu /home/ubuntu/.kube
+chmod 600 /home/ubuntu/.kube/config
+
+echo "installed k3s"
