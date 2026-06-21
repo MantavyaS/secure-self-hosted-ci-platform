@@ -57,4 +57,15 @@ chmod 600 /home/ubuntu/.kube/config
 grep -qxF 'export KUBECONFIG=$HOME/.kube/config' /home/ubuntu/.bashrc || \
   echo 'export KUBECONFIG=$HOME/.kube/config' >> /home/ubuntu/.bashrc
 
+# download github repo
+
+mkdir -p /home/ubuntu/projects
+cd home/ubuntu/projects
+git clone https://github.com/MantavyaS/secure-self-hosted-ci-platform.git
+chown -R ubuntu:ubuntu /home/ubuntu/projects/secure-self-hosted-ci-platform
+sudo -u ubuntu KUBECONFIG=/home/ubuntu/.kube/config kubectl create namespace nginx-test-n || true
+sudo -u ubuntu KUBECONFIG=/home/ubuntu/.kube/config kubectl apply -f /home/ubuntu/projects/secure-self-hosted-ci-platform/kubernetes/nginx-test/nginx-dep.yaml
+sudo -u ubuntu KUBECONFIG=/home/ubuntu/.kube/config kubectl apply -f /home/ubuntu/projects/secure-self-hosted-ci-platform/kubernetes/nginx-test/nginx-ingress.yaml
+
 echo "Bootstrap Complete"
+
