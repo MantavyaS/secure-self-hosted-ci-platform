@@ -39,8 +39,6 @@ chmod 700 get_helm.sh
 ./get_helm.sh
 echo "Installed Helm"
 
-echo "Bootstrap Complete"
-
 # Install k3s
 curl -sfL https://get.k3s.io | sh -
 
@@ -58,3 +56,5 @@ chmod 600 /home/ubuntu/.kube/config
 # Make kubectl always use this config
 grep -qxF 'export KUBECONFIG=$HOME/.kube/config' /home/ubuntu/.bashrc || \
   echo 'export KUBECONFIG=$HOME/.kube/config' >> /home/ubuntu/.bashrc
+
+echo "Bootstrap Complete"
