@@ -61,6 +61,7 @@ grep -qxF 'export KUBECONFIG=$HOME/.kube/config' /home/ubuntu/.bashrc || \
 
 mkdir -p /home/ubuntu/projects
 cd home/ubuntu/projects
+sudo chown ubuntu:ubuntu /home/ubuntu/projects
 git clone https://github.com/MantavyaS/secure-self-hosted-ci-platform.git
 chown -R ubuntu:ubuntu /home/ubuntu/projects/secure-self-hosted-ci-platform
 sudo -u ubuntu KUBECONFIG=/home/ubuntu/.kube/config kubectl create namespace nginx-test-n || true
