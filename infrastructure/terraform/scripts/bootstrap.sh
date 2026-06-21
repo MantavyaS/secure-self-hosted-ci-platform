@@ -41,11 +41,20 @@ echo "Installed Helm"
 
 echo "Bootstrap Complete"
 
-# downloading k3s and configuring kubectl
-curl -fL https://get.k3s.io | sh -
+# Install k3s
+curl -sfL https://get.k3s.io | sh -
+
+# Wait for kubeconfig to exist
+while [ ! -f /etc/rancher/k3s/k3s.yaml ]; do
+  sleep 2
+done
+
+# Configure kubectl for ubuntu user
 mkdir -p /home/ubuntu/.kube
 cp /etc/rancher/k3s/k3s.yaml /home/ubuntu/.kube/config
 chown -R ubuntu:ubuntu /home/ubuntu/.kube
 chmod 600 /home/ubuntu/.kube/config
 
-echo "installed k3s"
+# Make kubectl always use this config
+grep -qxF 'export KUBECONFIG=$HOME/.kube/config' /home/ubuntu/.bashrc || \
+  echo 'export KUBECONFIG=$HOME/.kube/config' >> /home/ubuntu/.bashrc
