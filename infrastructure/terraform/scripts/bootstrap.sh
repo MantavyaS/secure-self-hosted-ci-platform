@@ -24,6 +24,15 @@ usermod -aG docker ubuntu
 
 echo "installed docker"
 
+# installing aws cli
+
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" \
+-o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+echo "Installed aws cli"
+
 # installing helm
 
 curl -fSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
@@ -56,9 +65,10 @@ cd /home/ubuntu/projects
 sudo chown ubuntu:ubuntu /home/ubuntu/projects
 git clone https://github.com/MantavyaS/secure-self-hosted-ci-platform.git
 chown -R ubuntu:ubuntu /home/ubuntu/projects/secure-self-hosted-ci-platform
-sudo -u ubuntu KUBECONFIG=/home/ubuntu/.kube/config kubectl create namespace nginx-test-n || true
-sudo -u ubuntu KUBECONFIG=/home/ubuntu/.kube/config kubectl apply -f /home/ubuntu/projects/secure-self-hosted-ci-platform/kubernetes/nginx-test/nginx-dep.yaml
-sudo -u ubuntu KUBECONFIG=/home/ubuntu/.kube/config kubectl apply -f /home/ubuntu/projects/secure-self-hosted-ci-platform/kubernetes/nginx-test/nginx-ingress.yaml
+
+# create a k8s namespace where all deployments will live
+
+kubectl create namespace ci-runner
 
 echo "Bootstrap Complete"
 
