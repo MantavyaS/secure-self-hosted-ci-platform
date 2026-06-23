@@ -162,3 +162,37 @@ resource "aws_iam_instance_profile" "secure_ci_instance_profile" {
   name = "secure_ci_instance_profile"
   role = aws_iam_role.secure_ci_ec2_role.name
 }
+
+// Creating an ECR instance
+
+resource "aws_ecr_repository" "secure_ci_ecr" {
+  name = "secure-ci-ecr"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+
+  force_delete = true
+}
+
+resource "aws_ecr_lifecycle_policy" "secure_ci_ecr" {
+  repository = aws_ecr_repository.secure_ci_ecr.name
+
+  policy = jsonencode({
+    rules = [
+      {
+        rulePriority = 1
+        description = "Keep last 5 images"
+        selection = {
+          tagStatus = "any"
+          countType = "imageCountMoreThan"
+          countNumber = 5
+        }
+        action = {
+          type = "expire"
+        }
+      }
+    ]
+  })
+}

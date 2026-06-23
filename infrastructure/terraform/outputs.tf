@@ -5,3 +5,7 @@ output "ec2_public_ip" {
 output "ssh_command" {
   value = "ssh -i ~/.ssh/id_ed25519 ubuntu@${aws_instance.ci_platform_server.public_ip}"
 }
+
+output "secure_ci_ecr_url" {
+  value = aws_ecr_repository.secure_ci_ecr.repository_url
+}
