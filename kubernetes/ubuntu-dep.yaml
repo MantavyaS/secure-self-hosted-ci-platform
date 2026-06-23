@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ci-runner
+  namespace: ci-runner-n
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ci-runner
+  template:
+    metadata:
+      labels:
+        app: ci-runner
+    spec:
+      containers:
+      - name: ci-runner
+        image: 835577334660.dkr.ecr.us-east-1.amazonaws.com/secure-ci-ecr:latest
+        env:
+        - name: GITHUB_REPO_URL
+          valueFrom:
+            secretKeyRef:
+              name: ci-runner-secret
+              key: github_url
+        - name: GITHUB_RUNNER_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: ci-runner-secret
+              key: github_token
