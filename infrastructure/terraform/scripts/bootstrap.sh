@@ -24,14 +24,6 @@ usermod -aG docker ubuntu
 
 echo "installed docker"
 
-# Installing aws cli
-
-cd /tmp
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip -q awscliv2.zip
-./aws/install
-echo "Installed AWS CLI"
-
 # installing helm
 
 curl -fSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
