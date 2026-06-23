@@ -166,7 +166,7 @@ resource "aws_iam_instance_profile" "secure_ci_instance_profile" {
 // Creating an ECR instance
 
 resource "aws_ecr_repository" "secure_ci_ecr" {
-  name = "secure-ci-ecr"
+  name                 = "secure-ci-ecr"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -183,10 +183,10 @@ resource "aws_ecr_lifecycle_policy" "secure_ci_ecr" {
     rules = [
       {
         rulePriority = 1
-        description = "Keep last 5 images"
+        description  = "Keep last 5 images"
         selection = {
-          tagStatus = "any"
-          countType = "imageCountMoreThan"
+          tagStatus   = "any"
+          countType   = "imageCountMoreThan"
           countNumber = 5
         }
         action = {
