@@ -150,7 +150,11 @@ resource "aws_iam_role_policy" "secure_ci_container_policy" {
           "ecr:GetDownloadUrlForLayer",
           "ecr:BatchGetImage",
           "ecr:DescribeRepositories",
-          "ecr:DescribeImages"
+          "ecr:DescribeImages",
+          "ecr:InitiateLayerUpload",
+          "ecr:UploadLayerPart",
+          "ecr:CompleteLayerUpload",
+          "ecr:PutImage"
         ]
         Resource = "*"
       },
