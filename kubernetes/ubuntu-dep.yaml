@@ -13,6 +13,8 @@ spec:
       labels:
         app: ci-runner
     spec:
+      imagePullSecrets:
+      - name: ecr-pull-secret
       containers:
       - name: ci-runner
         image: 835577334660.dkr.ecr.us-east-1.amazonaws.com/secure-ci-ecr:latest
