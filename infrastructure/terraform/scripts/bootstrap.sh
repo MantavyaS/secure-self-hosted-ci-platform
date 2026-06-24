@@ -68,7 +68,7 @@ chown -R ubuntu:ubuntu /home/ubuntu/projects/secure-self-hosted-ci-platform
 
 # create a k8s namespace where all deployments will live
 
-kubectl create namespace ci-runner
+kubectl create namespace ci-runner-n
 
 echo "Bootstrap Complete"
 
