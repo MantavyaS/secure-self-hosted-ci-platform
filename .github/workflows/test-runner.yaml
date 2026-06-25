@@ -26,7 +26,3 @@ jobs:
           aws --version
           helm version 
           kubectl version --client
-
-      - name: Verify Docker images 
-        run: |
-          docker images
