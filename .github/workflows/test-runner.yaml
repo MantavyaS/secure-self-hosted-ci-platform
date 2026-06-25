@@ -1,0 +1,32 @@
+name: Test Self-hosted Runner 
+
+on:
+  workflow_dispatch:
+    
+jobs:
+  test:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: System info
+        run : |
+          echo "Hello World"
+          hostname
+          whoami
+          pwd
+      
+      - name: Check installed dependencies
+        run : |
+          python3 --version
+          git --version
+          docker --version
+          aws --version
+          helm version 
+          kubectl version --client
+
+      - name: Verify Docker images 
+        run: |
+          docker images
