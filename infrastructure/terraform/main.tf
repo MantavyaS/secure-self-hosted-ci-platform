@@ -162,6 +162,24 @@ resource "aws_iam_role_policy" "secure_ci_container_policy" {
   })
 }
 
+resource "aws_iam_role_policy" "arc_secretes_access" {
+  name = "arc-secrets-access"
+  role = aws_iam_role.secure_ci_ec2_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "secretsmanager:GetSecretValue"
+        ]
+        Resource = aws_secretsmanager_secret.github_arc_private_key.arn
+      }
+    ]
+  })
+}
+
 resource "aws_iam_instance_profile" "secure_ci_instance_profile" {
   name = "secure_ci_instance_profile"
   role = aws_iam_role.secure_ci_ec2_role.name
@@ -199,4 +217,16 @@ resource "aws_ecr_lifecycle_policy" "secure_ci_ecr" {
       }
     ]
   })
+}
+
+// secrets manager
+
+resource "aws_secretsmanager_secret" "github_arc_private_key" {
+  name = "github-arc-private-key"
+  description = "contents of .pem file that was generated when installing the github app"
+}
+
+resource "aws_secretsmanager_secret_version" "github_arc_private_key_value" {
+  secret_id = aws_secretsmanager_secret.github_arc_private_key.id
+  secret_string = var.github_app_private_key
 }
