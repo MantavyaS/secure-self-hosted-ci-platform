@@ -42,6 +42,7 @@ echo "Installed Helm"
 
 # Install k3s
 curl -sfL https://get.k3s.io | sh -
+export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 
 # Wait for kubeconfig to exist
 while [ ! -f /etc/rancher/k3s/k3s.yaml ]; do
@@ -66,9 +67,40 @@ sudo chown ubuntu:ubuntu /home/ubuntu/projects
 git clone https://github.com/MantavyaS/secure-self-hosted-ci-platform.git
 chown -R ubuntu:ubuntu /home/ubuntu/projects/secure-self-hosted-ci-platform
 
-# create a k8s namespace where all deployments will live
+# wait for k3s to be installed and ready
+until kubectl get nodes; do
+  sleep 5
+done
 
-kubectl create namespace ci-runner-n
+# Get the contents of the pem file from secrets manager
+aws secretsmanager get-secret-value \
+  --secret-id "${github_secret_id}" \
+  --query SecretString \
+  --output text > /tmp/github-app.pem
+chmod 600 /tmp/github-app.pem
+
+# create a namespace for the arc runner controller and install it using helm
+NAMESPACE="arc-systems"
+helm install arc --namespace="${NAMESPACE}" \
+  --create-namespace \
+  oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
+
+# create a namespace for the arc runner set and define variables and secrets
+kubectl create namespace arc-runners
+kubectl create secret generic pre-defined-secret \
+  --namespace=arc-runners \
+  --from-literal=github_app_id="${github_app_id}" \
+  --from-literal=github_app_installation_id="${github_installation_id}" \
+  --from-file=github_app_private_key=/tmp/github-app.pem
+INSTALLATION_NAME="arc-runner-set"
+NAMESPACE="arc-runners"
+GITHUB_CONFIG_URL="https://github.com/MantavyaS/secure-self-hosted-ci-platform"
+
+# install the arc runner set
+helm install "${INSTALLATION_NAME}" \
+  --namespace "${NAMESPACE}" \
+  --set githubConfigUrl="${GITHUB_CONFIG_URL}" \
+  --set githubConfigSecret=pre-defined-secret \
+  oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 
 echo "Bootstrap Complete"
-
