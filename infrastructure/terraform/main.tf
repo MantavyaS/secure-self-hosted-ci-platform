@@ -97,7 +97,11 @@ resource "aws_instance" "ci_platform_server" {
     delete_on_termination = true
   }
 
-  user_data = file("${path.module}/scripts/bootstrap.sh")
+  user_data = templatefile("${path.module}/scripts/bootstrap.sh", {
+    github_app_id = var.github_app_id
+    github_app_installation_id = var.github_app_installation_id
+    github_secret_id = aws_secretsmanager_secret.github_arc_private_key.name
+  })
 
   tags = {
     Project     = "Secure_Self_Hosted_CI_Platform"
