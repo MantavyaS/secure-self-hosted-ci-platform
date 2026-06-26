@@ -89,7 +89,7 @@ kubectl create namespace arc-runners
 kubectl create secret generic pre-defined-secret \
   --namespace=arc-runners \
   --from-literal=github_app_id="${github_app_id}" \
-  --from-literal=github_app_installation_id="${github_installation_id}" \
+  --from-literal=github_app_installation_id="${github_app_installation_id}" \
   --from-file=github_app_private_key=/tmp/github-app.pem
 
 # install the arc runner set
