@@ -80,8 +80,7 @@ aws secretsmanager get-secret-value \
 chmod 600 /tmp/github-app.pem
 
 # create a namespace for the arc runner controller and install it using helm
-NAMESPACE="arc-systems"
-helm install arc --namespace="${NAMESPACE}" \
+helm install arc --namespace="arc-systems" \
   --create-namespace \
   oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
 
@@ -92,14 +91,11 @@ kubectl create secret generic pre-defined-secret \
   --from-literal=github_app_id="${github_app_id}" \
   --from-literal=github_app_installation_id="${github_installation_id}" \
   --from-file=github_app_private_key=/tmp/github-app.pem
-INSTALLATION_NAME="arc-runner-set"
-NAMESPACE="arc-runners"
-GITHUB_CONFIG_URL="https://github.com/MantavyaS/secure-self-hosted-ci-platform"
 
 # install the arc runner set
-helm install "${INSTALLATION_NAME}" \
-  --namespace "${NAMESPACE}" \
-  --set githubConfigUrl="${GITHUB_CONFIG_URL}" \
+helm install "arc-runner-set" \
+  --namespace "arc-runners" \
+  --set githubConfigUrl="https://github.com/MantavyaS/secure-self-hosted-ci-platform"" \
   --set githubConfigSecret=pre-defined-secret \
   oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 
