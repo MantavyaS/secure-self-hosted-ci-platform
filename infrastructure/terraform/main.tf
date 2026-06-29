@@ -98,9 +98,9 @@ resource "aws_instance" "ci_platform_server" {
   }
 
   user_data = templatefile("${path.module}/scripts/bootstrap.sh.tpl", {
-    github_app_id = var.github_app_id
+    github_app_id              = var.github_app_id
     github_app_installation_id = var.github_app_installation_id
-    github_secret_id = aws_secretsmanager_secret.github_arc_private_key.name
+    github_secret_id           = aws_secretsmanager_secret.github_arc_private_key.name
   })
 
   tags = {
@@ -226,11 +226,11 @@ resource "aws_ecr_lifecycle_policy" "secure_ci_ecr" {
 // secrets manager
 
 resource "aws_secretsmanager_secret" "github_arc_private_key" {
-  name = "github-arc-private-key"
+  name        = "github-arc-private-key"
   description = "contents of .pem file that was generated when installing the github app"
 }
 
 resource "aws_secretsmanager_secret_version" "github_arc_private_key_value" {
-  secret_id = aws_secretsmanager_secret.github_arc_private_key.id
+  secret_id     = aws_secretsmanager_secret.github_arc_private_key.id
   secret_string = var.github_app_private_key
 }

@@ -12,16 +12,16 @@ variable "instance_name" {
 
 variable "github_app_id" {
   description = "App id given when creating github app"
-  type = string
+  type        = string
 }
 
 variable "github_app_installation_id" {
   description = "Installation id given at the end of the app url"
-  type = string
+  type        = string
 }
 
 variable "github_app_private_key" {
   description = "contents of .pem file generated when installing the app"
-  type = string
-  sensitive = true
+  type        = string
+  sensitive   = true
 }
