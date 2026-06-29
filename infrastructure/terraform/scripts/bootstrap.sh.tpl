@@ -95,7 +95,7 @@ kubectl create secret generic pre-defined-secret \
 # install the arc runner set
 helm install "arc-runner-set" \
   --namespace "arc-runners" \
-  --set githubConfigUrl="https://github.com/MantavyaS/secure-self-hosted-ci-platform"" \
+  --set githubConfigUrl="https://github.com/MantavyaS/secure-self-hosted-ci-platform" \
   --set githubConfigSecret=pre-defined-secret \
   oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 
