@@ -30,6 +30,9 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/s
     && ./get_helm.sh \
     && rm get_helm.sh
 
+# Install docker.io
+RUN apt-get update && apt-get install -y docker.io
+
 # Create runner user
 # RUN useradd -m runner \
 #     && usermod -aG sudo,docker runner \
