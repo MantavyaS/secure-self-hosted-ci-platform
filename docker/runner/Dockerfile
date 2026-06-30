@@ -1,7 +1,7 @@
-FROM ubuntu:24.04
+FROM ghcr.io/actions/actions-runner:latest
 
 ARG KUBECTL_VERSION=v1.34.1
-ARG RUNNER_VERSION=2.335.1
+# ARG RUNNER_VERSION=2.335.1
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -31,21 +31,21 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/s
     && rm get_helm.sh
 
 # Create runner user
-RUN useradd -m runner \
-    && usermod -aG sudo,docker runner \
-    && echo 'runner ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+# RUN useradd -m runner \
+#     && usermod -aG sudo,docker runner \
+#     && echo 'runner ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 USER runner
 WORKDIR /home/runner
 
 # Download GitHub Actions runner
-RUN mkdir actions-runner \
-    && cd actions-runner \
-    && curl -O -L "https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz" \
-    && tar xzf "actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz" \
-    && rm "actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz"
+# RUN mkdir actions-runner \
+#     && cd actions-runner \
+#     && curl -O -L "https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz" \
+#     && tar xzf "actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz" \
+#     && rm "actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz"
 
-COPY --chown=runner:runner start.sh /home/runner/start.sh
-RUN chmod +x /home/runner/start.sh
+# COPY --chown=runner:runner start.sh /home/runner/start.sh
+# RUN chmod +x /home/runner/start.sh
 
-ENTRYPOINT ["/home/runner/start.sh"]
+# ENTRYPOINT ["/home/runner/start.sh"]
