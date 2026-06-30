@@ -1,0 +1,49 @@
+name: Build Docker Image
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+    - "docker/runner/*"
+    - ".github/workflows/build-image.yaml"
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: secure-ci-runner
+  IMAGE_TAG: latest
+
+jobs:
+  build:
+    runs-on: arc-runner-set
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    
+    - name: Confirm required tools
+      run: |
+        aws --version
+        docker --version
+    
+    - name: Login to ECR
+      run: |
+        aws ecr get-login-password --region "$AWS_REGION" | \
+          docker login --username AWS --password-stdin "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
+      env:
+        AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID  }}
+    
+    - name: Build runner Image
+      run: |
+        docker build -t "$ECR_REPOSITORY:$IMAGE_TAG"  "docker/runner/*"
+    
+    - name: Tag Image
+      run: |
+        docker tag "$ECR_REPOSITORY:$IMAGE_TAG" \
+            "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG"
+    
+    - name: Push image to ECR
+      run: |
+        docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG"
+        env:
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      
+
+

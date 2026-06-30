@@ -1,0 +1,14 @@
+name: ARC Test
+on: 
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: arc-runner-set
+
+    steps:
+    - name: Confirm runner works
+      run: |
+        echo "Running on ARC"
+        hostname
+        whoami
