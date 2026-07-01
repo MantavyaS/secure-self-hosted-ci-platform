@@ -4,12 +4,13 @@ on:
   push:
     branches: [main]
     paths:
-    - "docker/runner/*"
+    - "docker/runner/**"
     - ".github/workflows/build-image.yaml"
 env:
   AWS_REGION: us-east-1
   ECR_REPOSITORY: secure-ci-runner
   IMAGE_TAG: latest
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID  }}
 
 jobs:
   build:
@@ -22,17 +23,16 @@ jobs:
       run: |
         aws --version
         docker --version
+        helm version
     
     - name: Login to ECR
       run: |
         aws ecr get-login-password --region "$AWS_REGION" | \
           docker login --username AWS --password-stdin "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
-      env:
-        AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID  }}
     
     - name: Build runner Image
       run: |
-        docker build -t "$ECR_REPOSITORY:$IMAGE_TAG"  "docker/runner/*"
+        docker build -t "$ECR_REPOSITORY:$IMAGE_TAG"  "docker/runner"
     
     - name: Tag Image
       run: |
@@ -42,8 +42,18 @@ jobs:
     - name: Push image to ECR
       run: |
         docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG"
-        env:
-          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+    
+    - name: Upgrade arc runner set
+      run: |
+        ECR_IMAGE_URI="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG"
+        helm upgrade arc-runner-set \
+          --namespace arc-runners \
+          --set githubConfigUrl="https://github.com/MantavyaS/secure-self-hosted-ci-platform" \
+          --set githubConfigSecret=pre-defined-secret \
+          --set template.spec.containers[0].name=runner \
+          --set template.spec.containers[0].image="$ECR_IMAGE_URI" \
+          --set-json 'template.spec.containers[0].command=["/home/runner/run.sh"]' \
+          oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
       
 
 
