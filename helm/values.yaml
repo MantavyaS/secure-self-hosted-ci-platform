@@ -1,0 +1,18 @@
+githubConfigUrl: "https://github.com/MantavyaS/secure-self-hosted-ci-platform"
+githubConfigSecret: pre-defined-secret
+
+template:
+  spec:
+    containers:
+      - name: runner
+        image: ghcr.io/actions/actions-runner:latest
+        command: ["/home/runner/run.sh"]
+        volumeMounts:
+          - name: docker-socket
+            mountPath: /var/run/docker.sock
+
+    volumes:
+      - name: docker-socket
+        hostPath:
+          path: /var/run/docker.sock
+          type: Socket
