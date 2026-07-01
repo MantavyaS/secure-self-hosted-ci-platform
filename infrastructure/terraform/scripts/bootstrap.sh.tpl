@@ -98,4 +98,51 @@ helm install "arc-runner-set" \
   -f /home/ubuntu/projects/secure-self-hosted-ci-platform/helm/values.yaml \
   oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
 
+# allow ARC runner jobs to run upgrades to helm for the ARC runner scale set
+kubectl create role arc-runner-helm-manager \
+  --namespace arc-runners \
+  --verb=get,list,watch,create,update,patch,delete \
+  --resource=secrets,configmaps,pods,pods/log,serviceaccounts,roles,rolebindings \
+  || true
+
+kubectl create rolebinding arc-runner-helm-manager-binding \
+  --namespace arc-runners \
+  --role=arc-runner-helm-manager \
+  --serviceaccount=arc-runners:arc-runner-set-gha-rs-no-permission \
+  || true
+
+kubectl create role arc-runner-helm-manager \
+  --namespace arc-systems \
+  --verb=get,list,watch,create,update,patch,delete \
+  --resource=secrets,configmaps,pods,pods/log,serviceaccounts,roles,rolebindings \
+  || true
+
+kubectl create rolebinding arc-runner-helm-manager-binding \
+  --namespace arc-systems \
+  --role=arc-runner-helm-manager \
+  --serviceaccount=arc-runners:arc-runner-set-gha-rs-no-permission \
+  || true
+
+kubectl create clusterrole arc-runner-helm-cluster-reader \
+  --verb=get,list,watch \
+  --resource=deployments.apps,namespaces \
+  || true
+
+kubectl create clusterrolebinding arc-runner-helm-cluster-reader-binding \
+  --clusterrole=arc-runner-helm-cluster-reader \
+  --serviceaccount=arc-runners:arc-runner-set-gha-rs-no-permission \
+  || true
+
+kubectl create role arc-runner-helm-arc-manager \
+  --namespace arc-runners \
+  --verb=get,list,watch,create,update,patch,delete \
+  --resource='*.*' \
+  || true
+
+kubectl create rolebinding arc-runner-helm-arc-manager-binding \
+  --namespace arc-runners \
+  --role=arc-runner-helm-arc-manager \
+  --serviceaccount=arc-runners:arc-runner-set-gha-rs-no-permission \
+  || true
+
 echo "Bootstrap Complete"
