@@ -34,7 +34,7 @@ jobs:
     
     - name: Build runner Image
       run: |
-        docker build -t "$ECR_REPOSITORY:$IMAGE_TAG"  "docker/runner"
+        docker build -t "$ECR_REPOSITORY"  docker/runner
     
     - name: Tag Image
       run: |
