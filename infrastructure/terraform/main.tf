@@ -44,7 +44,7 @@ resource "aws_security_group_rule" "ssh_ingress" {
   to_port           = 22
   protocol          = "tcp"
   security_group_id = aws_security_group.secure_ci_sg.id
-  cidr_blocks       = ["142.189.36.228/32"]
+  cidr_blocks       = ["142.115.33.29/32"]
 }
 
 resource "aws_security_group_rule" "all_egress" {
