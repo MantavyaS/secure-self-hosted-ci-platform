@@ -19,12 +19,6 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
     
-    - name: Confirm required tools
-      run: |
-        aws --version
-        docker --version
-        helm version
-    
     - name: Login to ECR
       run: |
         aws ecr get-login-password --region "$AWS_REGION" | \
