@@ -1,0 +1,19 @@
+name: Validate Terraform Configuration
+on: 
+  push:
+    branches: [main]
+    paths:
+    - infrastructure/terraform
+
+jobs:
+  validate:
+    runs-on: arc-runner-set
+    steps:
+    - uses: actions\checkout@v4
+    - name: validate teraform
+      run: |
+        cd infrastructure/terraform
+        terraform fmt -check
+        terraform init
+        terraform validate
+        terraform plan
