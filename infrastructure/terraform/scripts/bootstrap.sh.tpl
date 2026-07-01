@@ -92,6 +92,14 @@ kubectl create secret generic pre-defined-secret \
   --from-literal=github_app_installation_id="${github_app_installation_id}" \
   --from-file=github_app_private_key=/tmp/github-app.pem
 
+# create an image pull secret for the arc runner set
+ECR_PASSWORD=$(aws ecr get-login-password --region us-east-1)
+kubectl create secret docker-registry ecr-pull-secret \
+  --namespace arc-runners \
+  --docker-server="${aws_account_id}.dkr.ecr.us-east-1.amazonaws.com" \
+  --docker-username=AWS \
+  --docker-password="$ECR_PASSWORD"
+
 # install the arc runner set
 helm install "arc-runner-set" \
   --namespace "arc-runners" \
