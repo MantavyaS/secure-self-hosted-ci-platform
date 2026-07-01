@@ -1,5 +1,7 @@
 FROM ghcr.io/actions/actions-runner:latest
 
+USER root
+
 ARG KUBECTL_VERSION=v1.34.1
 # ARG RUNNER_VERSION=2.335.1
 
@@ -24,7 +26,9 @@ RUN install -m 0755 -d /etc/apt/keyrings \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Terraform
+# Install Terraform
 RUN wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null \
+    && . /etc/os-release \
     && echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $VERSION_CODENAME main" | tee /etc/apt/sources.list.d/hashicorp.list \
     && apt-get update \
     && apt-get install -y terraform \
