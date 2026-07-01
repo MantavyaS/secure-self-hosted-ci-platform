@@ -25,7 +25,7 @@ module "vpc" {
   }
 }
 
-# Security groups
+# Security groups - 
 resource "aws_security_group" "secure_ci_sg" {
   name        = "secure-ci-sg"
   description = "security group for the secure self hosted CI platform"
