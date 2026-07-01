@@ -57,11 +57,8 @@ jobs:
         ECR_IMAGE_URI="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$IMAGE_TAG"
         helm upgrade arc-runner-set \
           --namespace arc-runners \
-          --set githubConfigUrl="https://github.com/MantavyaS/secure-self-hosted-ci-platform" \
-          --set githubConfigSecret=pre-defined-secret \
-          --set template.spec.containers[0].name=runner \
+          -f helm/values.yaml \
           --set template.spec.containers[0].image="$ECR_IMAGE_URI" \
-          --set-json 'template.spec.containers[0].command=["/home/runner/run.sh"]' \
           oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
       
 
