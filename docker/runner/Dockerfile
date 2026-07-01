@@ -5,7 +5,7 @@ ARG KUBECTL_VERSION=v1.34.1
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y curl unzip git jq ca-certificates python3 python3-pip sudo gnupg software-properties-common wget lsb-release && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y curl unzip git jq ca-certificates sudo gnupg wget && rm -rf /var/lib/apt/lists/*
 
 # Install AWS CLI
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
@@ -25,7 +25,7 @@ RUN install -m 0755 -d /etc/apt/keyrings \
 
 # Install Terraform
 RUN wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null \
-    && echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hashicorp.list \
+    && echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $VERSION_CODENAME main" | tee /etc/apt/sources.list.d/hashicorp.list \
     && apt-get update \
     && apt-get install -y terraform \
     && rm -rf /var/lib/apt/lists/*
