@@ -4,7 +4,7 @@ githubConfigSecret: pre-defined-secret
 template:
   spec:
     imagePullSecrets:
-    - name: ecr-pull-secrets
+    - name: ecr-pull-secret
     securityContext:
       fsGroup: 988
     containers:
