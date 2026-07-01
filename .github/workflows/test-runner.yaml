@@ -1,9 +1,13 @@
-name: Actions Runner Controller Demo
+name: Validate runner image
 on:
   workflow_dispatch:
 
 jobs:
-  Explore-Github-Actions:
+  Validate:
     runs-on: arc-runner-set
     steps:
-    - run: echo "This job uses runner scale set runners"
+    - run: |
+        aws --version
+        docker --version
+        helm version
+        terraform version
