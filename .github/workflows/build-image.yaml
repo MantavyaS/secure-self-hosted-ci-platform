@@ -8,7 +8,7 @@ on:
     - ".github/workflows/build-image.yaml"
 env:
   AWS_REGION: us-east-1
-  ECR_REPOSITORY: secure-ci-runner
+  ECR_REPOSITORY: secure-ci-ecr
   IMAGE_TAG: latest
   AWS_ACCOUNT_ID: 835577334660
 
