@@ -3,6 +3,8 @@ githubConfigSecret: pre-defined-secret
 
 template:
   spec:
+    securityContext:
+      fsGroup: 988
     containers:
       - name: runner
         image: ghcr.io/actions/actions-runner:latest
