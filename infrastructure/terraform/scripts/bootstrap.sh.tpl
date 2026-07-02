@@ -96,7 +96,7 @@ kubectl create secret generic pre-defined-secret \
 ECR_PASSWORD=$(aws ecr get-login-password --region us-east-1)
 kubectl create secret docker-registry ecr-pull-secret \
   --namespace arc-runners \
-  --docker-server="${aws_account_id}.dkr.ecr.us-east-1.amazonaws.com" \
+  --docker-server="835577334660.dkr.ecr.us-east-1.amazonaws.com" \
   --docker-username=AWS \
   --docker-password="$ECR_PASSWORD"
 
