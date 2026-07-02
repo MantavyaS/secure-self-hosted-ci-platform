@@ -171,6 +171,25 @@ resource "aws_iam_role_policy" "secure_ci_container_policy" {
   })
 }
 
+resource "aws_iam_role_policy" "secure_ci_terraform_read_policy" {
+  name = "secure_ci_terraform_read_policy"
+  role = aws_iam_role.secure_ci_ec2_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ec2:DescribeImages",
+          "secretsmanager:DescribeSecret"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
 resource "aws_iam_role_policy" "arc_secretes_access" {
   name = "arc-secrets-access"
   role = aws_iam_role.secure_ci_ec2_role.id
