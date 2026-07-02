@@ -19,3 +19,7 @@ variable "github_app_installation_id" {
   description = "Installation id given at the end of the app url"
   type        = string
 }
+
+variable "ssh_public_key" {
+  type = string
+}

@@ -71,7 +71,7 @@ data "aws_ami" "ubuntu" {
 resource "aws_key_pair" "secure_ci" {
   key_name = "secure_ci_key"
 
-  public_key = file("~/.ssh/id_ed25519.pub")
+  public_key = var.ssh_public_key
 }
 
 resource "aws_instance" "ci_platform_server" {
