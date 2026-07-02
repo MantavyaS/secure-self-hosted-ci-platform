@@ -182,7 +182,9 @@ resource "aws_iam_role_policy" "secure_ci_terraform_read_policy" {
         Effect = "Allow"
         Action = [
           "ec2:DescribeImages",
-          "secretsmanager:DescribeSecret"
+          "secretsmanager:DescribeSecret",
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:GetResourcePolicy"
         ]
         Resource = "*"
       }
