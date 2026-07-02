@@ -104,9 +104,9 @@ resource "aws_instance" "ci_platform_server" {
     github_secret_id           = data.aws_secretsmanager_secret.github_arc_private_key.name
   })
 
-  depends_on = [ 
+  depends_on = [
     aws_ecr_repository.secure_ci_ecr
-   ]
+  ]
 
   tags = {
     Project     = "Secure_Self_Hosted_CI_Platform"
