@@ -153,4 +153,11 @@ kubectl create rolebinding arc-runner-helm-arc-manager-binding \
   --serviceaccount=arc-runners:arc-runner-set-gha-rs-no-permission \
   || true
 
+# Installing Prometheus
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
+helm install monitoring prometheus-community/kube-prometheus-stack \
+  --namespace monitoring \
+  --create-namespace
+
 echo "Bootstrap Complete"
