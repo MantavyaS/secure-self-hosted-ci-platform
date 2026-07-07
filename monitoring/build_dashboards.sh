@@ -9,7 +9,8 @@ USER=$(kubectl get secret -n monitoring monitoring-grafana -o jsonpath="{.data.a
 PASS=$(kubectl get secret -n monitoring monitoring-grafana -o jsonpath="{.data.admin-password}" | base64 -d)
 
 for file in "$DASHBOARD_DIR"/*.json; do
-    echo "provisioning $file"
+    name=$(jq -r '.metadata.name' "$file")
+    echo "Provisioning $name from $file"
 
     code=$(curl -s -o /tmp/grafana_response.json -w "%{http_code}" \
     -u "$USER:$PASS"   \
@@ -18,12 +19,13 @@ for file in "$DASHBOARD_DIR"/*.json; do
     "$GRAFANA_URL/apis/dashboard.grafana.app/v2/namespaces/default/dashboards"   \
     --data-binary @"$file")
 
-    if [ "$code" == "409" ]; then
+    if [ "$code" = "409" ]; then
+        echo "Dashboard already exists updating $name"
         curl -s -o /tmp/grafana_response.json -w "%{http_code}" \
         -u "$USER:$PASS"   \
         -H "Content-Type: application/json"   \
         -X PUT   \
-        "$GRAFANA_URL/apis/dashboard.grafana.app/v2/namespaces/default/dashboards"   \
+        "$GRAFANA_URL/apis/dashboard.grafana.app/v2/namespaces/default/dashboards/$name"   \
         --data-binary @"$file" | jq
     
     else
