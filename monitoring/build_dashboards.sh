@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-GRAFANA_URL="http://monitoring-grafana.monitoring"
+GRAFANA_URL="http://$(kubectl get svc -n monitoring monitoring-grafana -o jsonpath='{.spec.clusterIP}')"
 DASHBOARD_DIR="/home/ubuntu/projects/secure-self-hosted-ci-platform/monitoring/dashboards"
 
 USER=$(kubectl get secret -n monitoring monitoring-grafana -o jsonpath="{.data.admin-user}" | base64 -d)
