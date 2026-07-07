@@ -4,10 +4,6 @@
   "metadata": {
     "name": "adqtwp8",
     "namespace": "default",
-    "uid": "3ba321b2-344d-415a-ae24-28eacff8b467",
-    "resourceVersion": "1783366431054993",
-    "generation": 4,
-    "creationTimestamp": "2026-07-06T19:20:19Z",
     "labels": {
       "grafana.app/deprecatedInternalID": "2556034956021760"
     },
@@ -873,8 +869,8 @@
     "tags": [],
     "timeSettings": {
       "timezone": "browser",
-      "from": "2026-07-05T18:53:35.853Z",
-      "to": "2026-07-06T18:53:35.853Z",
+      "from": "now-6h",
+      "to": "now",
       "autoRefresh": "1m",
       "autoRefreshIntervals": [
         "5s",

@@ -5,9 +5,6 @@
     "name": "ad2czfv",
     "namespace": "default",
     "uid": "6a7e8675-743d-4a61-aa1e-b1f0a5376ca4",
-    "resourceVersion": "1783365452921010",
-    "generation": 9,
-    "creationTimestamp": "2026-07-06T18:48:37Z",
     "labels": {
       "grafana.app/deprecatedInternalID": "2548057008132096"
     },

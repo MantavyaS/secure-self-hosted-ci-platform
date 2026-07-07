@@ -5,9 +5,6 @@
     "name": "adqsndl",
     "namespace": "default",
     "uid": "beb63b1c-1b4b-457a-bb62-786d1330bf3a",
-    "resourceVersion": "1783367176913993",
-    "generation": 1,
-    "creationTimestamp": "2026-07-06T19:46:16Z",
     "labels": {
       "grafana.app/deprecatedInternalID": "2562565457989632"
     },
