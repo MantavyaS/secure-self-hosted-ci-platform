@@ -1,0 +1,47 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: alerts
+  namespace: monitoring 
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: platform.rules
+      rules:
+        - alert: HighCPUUsage
+          expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 90
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High CPU Usage"
+            description: "EC2 CPU Usage has been above 90% for over 5 minutes"
+
+        - alert: HighMemoryUsage
+          expr: 100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 90
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High Memory Usage"
+            description: "Memory Usage has been above 90% for over 5 minutes"
+          
+        - alert: NodeDown
+          expr: up{job=~".*node-exporter.*"} == 0
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Node exporter down"
+            description: "Prometheus is unable to scrape node exporter"
+          
+        - alert: RunnerPodFailed
+          expr: sum(kube_pod_status_phase{namespace="arc-runners",phase="Failed"}) > 0
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Runner pod failed" 
+            description: "At least one arc runner pod has failed"
+
