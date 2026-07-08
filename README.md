@@ -30,9 +30,11 @@ This approach also allows workflows to access private resources that GitHub-host
 ---
 
 ## Architecture
+### High Level Architecture
+![High Level Architecture diagram](images/secure_ci_lowLevel.drawio.png)
 
-![Architecture diagram](docs/images/architecture.png)
-*Diagram: VPC layout, EC2/K3s node, ARC controller and runner pods, monitoring stack, GitHub App auth flow*
+### Workflow
+![Workflow Diagram](images/secure_ci_highLevel.drawio.png)
 
 When a workflow is triggered:
 
