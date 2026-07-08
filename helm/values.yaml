@@ -1,6 +1,6 @@
 githubConfigUrl: "https://github.com/mantavya-se"
 githubConfigSecret: pre-defined-secret
-
+runnerGroup: self-hosted-runner
 template:
   spec:
     imagePullSecrets:
