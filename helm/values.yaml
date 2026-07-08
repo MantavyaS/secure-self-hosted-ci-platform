@@ -1,4 +1,4 @@
-githubConfigUrl: "https://github.com/MantavyaS/secure-self-hosted-ci-platform"
+githubConfigUrl: "https://github.com/mantavya-se"
 githubConfigSecret: pre-defined-secret
 
 template:
